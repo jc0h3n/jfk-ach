@@ -39,7 +39,8 @@ if (ext) {
   console.log(`extended: ${entries.filter(e => e[5] === "X").length} of ${items.length}`);
 }
 
-entries.sort((a, b) => a[1].localeCompare(b[1]) || a[2].localeCompare(b[2]) || a[0].localeCompare(b[0]));
+// By date; within a day, document order (IDs are assigned in order; Selected entries come before Extended)
+entries.sort((a, b) => a[1].localeCompare(b[1]) || a[0].localeCompare(b[0]));
 writeFileSync(out + "/data/timeline.json", JSON.stringify({
   sources: {
     S: { name: "Selected Chronology", cite: "Course syllabus, Appendix I" },
