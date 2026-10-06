@@ -37,11 +37,16 @@ Everything you do in Open ACH stays in your browser until you export it.
 
 Edit [evidence.mjs](evidence.mjs) and run `node build.mjs`. Evidence IDs are stable, and ratings already saved in the files are kept.
 
+## Publishing to the public site
+
+The public version lives at https://jc0h3n.github.io/jfk-hypotheses/ (repo jc0h3n/jfk-hypotheses). After rating, export from Open ACH over the files in `analyses/`, then run `node publish.mjs` to copy the analyses, METHOD.md and SOURCES.md to the jfk-hypotheses folder, and commit and push there. Nothing else from this repo is published.
+
 ## Files
 
 - `analyses/`: the two Open ACH files
 - `evidence.mjs`: hypotheses and evidence as plain data, with sources
 - `build.mjs`: turns that into the Open ACH files
+- `publish.mjs`: copies the analyses and notes to the public site
 - [METHOD.md](METHOD.md): how evidence was chosen and weighted
 - [SOURCES.md](SOURCES.md): what the source shorthand refers to
 

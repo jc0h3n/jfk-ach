@@ -8,7 +8,8 @@ import { WHO_FIRED, WHO_BEHIND } from "./evidence.mjs";
 const TYPES = ["Fact", "Report", "Assumption", "Absence of evidence", "Argument"], LEVELS = ["L", "M", "H"];
 mkdirSync(new URL("./analyses/", import.meta.url), { recursive: true });
 
-for (const def of [WHO_FIRED, WHO_BEHIND]) {
+// Built B first, then A, so A (the newer) is listed first in Open ACH, which sorts by last update
+for (const def of [WHO_BEHIND, WHO_FIRED]) {
   const file = new URL(`./analyses/${def.slug}.json`, import.meta.url);
   const old = existsSync(file) ? JSON.parse(readFileSync(file, "utf8")) : null;
   const ids = new Set();
