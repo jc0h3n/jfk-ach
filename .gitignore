@@ -1,0 +1,4 @@
+# Course materials belong to their authors and publishers: never commit them
+private/
+*.pdf
+node_modules/
