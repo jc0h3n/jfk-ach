@@ -39,7 +39,14 @@ Edit [evidence.mjs](evidence.mjs) and run `node build.mjs`. Evidence IDs are sta
 
 ## Publishing to the public site
 
-The public version lives at https://jc0h3n.github.io/jfk-hypotheses/ (repo jc0h3n/jfk-hypotheses). After rating, export from Open ACH over the files in `analyses/`, then run `node publish.mjs` to copy the analyses, METHOD.md and SOURCES.md to the jfk-hypotheses folder, and commit and push there. Nothing else from this repo is published.
+The public version lives at https://jc0h3n.github.io/jfk-hypotheses/ (repo jc0h3n/jfk-hypotheses). After rating, export from Open ACH over the files in `analyses/`, then run `node publish.mjs` to copy the analyses, METHOD.md and SOURCES.md to the jfk-hypotheses folder, and commit and push there.
+
+The site's case library (`library.html`) reads `data/*.json` there. Those files hold our own summaries with page citations, never the course text:
+
+- `node tools/parse.mjs` turns the extracted course texts in `private/text/` into structured, verbatim data in `private/data/` (chronologies, cast, key questions, cryptonyms, agency documents, books, primer). Private: for reference while writing summaries.
+- `public-src/selected-*.json` and `extended-*.json` are the own-words chronology entries, keyed to the IDs in `private/data/`. `node tools/timeline.mjs` checks them and writes the site's `data/timeline.json`.
+- `node tools/books.mjs` writes the book list (bibliographic facts only).
+- Theories, people, questions, readings and the glossary are written directly in the site's `data/` folder.
 
 ## Files
 
@@ -47,6 +54,8 @@ The public version lives at https://jc0h3n.github.io/jfk-hypotheses/ (repo jc0h3
 - `evidence.mjs`: hypotheses and evidence as plain data, with sources
 - `build.mjs`: turns that into the Open ACH files
 - `publish.mjs`: copies the analyses and notes to the public site
+- `tools/`: course-document parser and the builders for the site's timeline and book list
+- `public-src/`: own-words chronology entries for the site
 - [METHOD.md](METHOD.md): how evidence was chosen and weighted
 - [SOURCES.md](SOURCES.md): what the source shorthand refers to
 
