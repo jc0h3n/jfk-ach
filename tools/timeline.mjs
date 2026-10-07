@@ -2,6 +2,7 @@
 // node tools/timeline.mjs [path to jfk-hypotheses]   (default ../jfk-hypotheses)
 // public-src/selected-*.json: [id, date, page, text]   (Selected Chronology, syllabus Appendix I)
 // public-src/extended-*.json: [id, date, time, page, text, tag]   (Extended Chronology)
+// public-src/notes-selected.json: [number, page, text]   (the Selected Chronology's footnotes, own words)
 // Checks that IDs and dates are well formed, unique, and (when private/data exists) match the parsed originals.
 import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
 
@@ -47,6 +48,16 @@ writeFileSync(out + "/data/timeline.json", JSON.stringify({
     X: { name: "Extended Chronology", cite: "Extended Chronology (course document)" }
   },
   fields: ["id", "date", "time", "page", "text", "source", "tag"],
-  entries
+  entries,
+  // Selected Chronology footnotes by page: { page: [[number, text], ...] }. A note on a page with no
+  // Selected entry is filed under the nearest earlier page that has one.
+  notes: existsSync(here("public-src/notes-selected.json"))
+    ? read("notes-selected.json").reduce((m, [n, page, text]) => {
+        const pages = entries.filter(e => e[5] === "S" && e[3] <= page).map(e => e[3]);
+        const p = pages.length ? Math.max(...pages) : page;
+        (m[p] ||= []).push([n, text]);
+        return m;
+      }, {})
+    : {}
 }) + "\n");
 console.log(`wrote ${entries.length} entries`);
