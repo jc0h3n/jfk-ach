@@ -61,4 +61,4 @@ The site's case library (`library.html`) reads `data/*.json` there. Those files 
 - [METHOD.md](METHOD.md): how evidence was chosen and weighted
 - [SOURCES.md](SOURCES.md): what the source shorthand refers to
 
-**Course materials are not included.** The course materials are not included and must not be committed: they belong to their authors and publishers. Keep copies in `private/`, which git ignores.
+**Course materials are not included.** They belong to their authors and publishers and must not be committed. Keep copies in `private/`, which git ignores.
