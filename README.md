@@ -1,5 +1,7 @@
 # JFK ACH
 
+**Live site:** https://jc0h3n.github.io/jfk-hypotheses/
+
 An Analysis of Competing Hypotheses on the assassination of President John F. Kennedy, built for use with [Open ACH](https://jc0h3n.github.io/open-ach/) and drawn from the Cowell 103 course materials (*The Alternative Theories of the Assassination of President John F. Kennedy & the Implications of Each*) and the official record.
 
 ## Two matrices
@@ -59,4 +61,4 @@ The site's case library (`library.html`) reads `data/*.json` there. Those files 
 - [METHOD.md](METHOD.md): how evidence was chosen and weighted
 - [SOURCES.md](SOURCES.md): what the source shorthand refers to
 
-**Private repository.** The course materials are not included and must not be committed: they belong to their authors and publishers. Keep copies in `private/`, which git ignores.
+**Course materials are not included.** The course materials are not included and must not be committed: they belong to their authors and publishers. Keep copies in `private/`, which git ignores.
