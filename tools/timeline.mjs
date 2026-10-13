@@ -5,6 +5,7 @@
 // public-src/notes-selected.json: [number, page, text]   (the Selected Chronology's footnotes, own words)
 // Checks that IDs and dates are well formed, unique, and (when private/data exists) match the parsed originals.
 import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
+import { citeTimeline } from "./timeline-cite.mjs";
 
 const here = p => new URL("../" + p, import.meta.url);
 const out = process.argv[2] || new URL("../../jfk-hypotheses/", import.meta.url).pathname.replace(/^\/([A-Z]:)/, "$1");
@@ -42,12 +43,16 @@ if (ext) {
 
 // By date; within a day, document order (IDs are assigned in order; Selected entries come before Extended)
 entries.sort((a, b) => a[1].localeCompare(b[1]) || a[0].localeCompare(b[0]));
+// Public sources: each entry gets 1-2 keys into `links` (see tools/timeline-cite.mjs)
+const { links, cites } = citeTimeline(entries);
+entries.forEach((e, i) => e.push(cites[i]));
 writeFileSync(out + "/data/timeline.json", JSON.stringify({
   sources: {
     S: { name: "Selected Chronology", cite: "Course syllabus, Appendix I" },
     X: { name: "Extended Chronology", cite: "Extended Chronology (course document)" }
   },
-  fields: ["id", "date", "time", "page", "text", "source", "tag"],
+  fields: ["id", "date", "time", "page", "text", "source", "tag", "links"],
+  links,
   entries,
   // Selected Chronology footnotes by page: { page: [[number, text], ...] }. A note on a page with no
   // Selected entry is filed under the nearest earlier page that has one.

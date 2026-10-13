@@ -1,6 +1,7 @@
 // Replaces course-document citations in the published ACH matrices with public, linkable sources.
 // node tools/cite.mjs [path to jfk-hypotheses]   Each evidence item gets source (text) and links [[label, url], ...].
 import { readFileSync, writeFileSync } from "node:fs";
+import { pathToFileURL } from "node:url";
 
 const out = process.argv[2] || new URL("../../jfk-hypotheses/", import.meta.url).pathname.replace(/^\/([A-Z]:)/, "$1");
 const NARA = "https://www.archives.gov/research/jfk";
@@ -94,7 +95,8 @@ const NOTE_FIX = [
   [/ \(Syllabus p\. 14\)/, ""],
   [/a planned exit \(Syllabus\)/, "a planned exit (John Newman, JFK and Vietnam)"],
 ];
-for (const f of ["a-who-fired", "b-who-was-behind-it"]) {
+// Rewrites the matrices only when run directly (timeline-cite.mjs imports L)
+if (import.meta.url === pathToFileURL(process.argv[1]).href) for (const f of ["a-who-fired", "b-who-was-behind-it"]) {
   const path = `${out}/analyses/${f}.json`;
   const a = JSON.parse(readFileSync(path, "utf8"));
   for (const e of a.evidence) {
@@ -104,7 +106,9 @@ for (const f of ["a-who-fired", "b-who-was-behind-it"]) {
     if (links.some(l => !l)) throw new Error(`bad key in ${e.id}`);
     // Keep any non-course citations already present (books, the official record), drop the course documents.
     // (Re-running is safe: labels written by an earlier run are recognized and rebuilt.)
-    const kept = e.source.split(/;\s*/).filter(s => s && !COURSE.test(s) && !DROP.test(s) && !LABELS.has(s) && !s.startsWith("Wikipedia, "));
+    // (Labels can contain "; ", so they are removed before splitting; stray "...)" fragments are leftovers of that.)
+    const rest = [...LABELS].sort((a, b) => b.length - a.length).reduce((s, l) => s.split(l).join(""), e.source);
+    const kept = rest.split(/;\s*/).filter(s => s && !COURSE.test(s) && !DROP.test(s) && !/^[^(]*\)$/.test(s) && !s.startsWith("Wikipedia, "));
     for (const [re, to] of NOTE_FIX) e.notes = e.notes.replace(re, to);
     e.links = links;
     e.source = [...links.map(l => l[0].replace(/^Wikipedia: /, "Wikipedia, ")), ...kept].join("; ");
